@@ -1,95 +1,32 @@
-last_updated: "2026-09-10T14:30:00"
-total_value: 52847.63
-total_cost_basis: 41250.00
-total_gain_loss: 11597.63
+last_updated: '2026-09-10T09:20:39.961231'
+total_value: 326065.37
+total_cost_basis: 257280.88
+total_gain_loss: 68784.49
 holdings:
-  - symbol: VTI
-    name: Vanguard Total Stock Market ETF
-    total_quantity: 45.2500
-    average_cost: 215.50
-    total_cost_basis: 9751.38
-    current_price: 252.00
-    current_value: 11403.00
-    gain_loss: 1651.62
-    gain_loss_percent: 16.94
-  - symbol: VXUS
-    name: Vanguard Total International Stock ETF
-    total_quantity: 82.1000
-    average_cost: 56.80
-    total_cost_basis: 4663.28
-    current_price: 62.40
-    current_value: 5123.04
-    gain_loss: 459.76
-    gain_loss_percent: 9.86
-  - symbol: BND
-    name: Vanguard Total Bond Market ETF
-    total_quantity: 120.5000
-    average_cost: 74.20
-    total_cost_basis: 8941.10
-    current_price: 72.80
-    current_value: 8772.40
-    gain_loss: -168.70
-    gain_loss_percent: -1.89
-  - symbol: VNQ
-    name: Vanguard Real Estate ETF
-    total_quantity: 35.7500
-    average_cost: 88.90
-    total_cost_basis: 3178.18
-    current_price: 92.50
-    current_value: 3306.88
-    gain_loss: 128.70
-    gain_loss_percent: 4.05
-  - symbol: SCHD
-    name: Schwab US Dividend Equity ETF
-    total_quantity: 68.3000
-    average_cost: 72.40
-    total_cost_basis: 4944.92
-    current_price: 81.20
-    current_value: 5545.96
-    gain_loss: 601.04
-    gain_loss_percent: 12.15
-  - symbol: VWO
-    name: Vanguard Emerging Markets ETF
-    total_quantity: 55.0000
-    average_cost: 42.30
-    total_cost_basis: 2326.50
-    current_price: 48.70
-    current_value: 2678.50
-    gain_loss: 352.00
-    gain_loss_percent: 15.13
-  - symbol: GLD
-    name: SPDR Gold Shares
-    total_quantity: 12.5000
-    average_cost: 178.60
-    total_cost_basis: 2232.50
-    current_price: 195.20
-    current_value: 2440.00
-    gain_loss: 207.50
-    gain_loss_percent: 9.29
-  - symbol: TLT
-    name: iShares 20+ Year Treasury Bond ETF
-    total_quantity: 28.4000
-    average_cost: 98.70
-    total_cost_basis: 2803.08
-    current_price: 87.30
-    current_value: 2479.32
-    gain_loss: -323.76
-    gain_loss_percent: -11.55
-  - symbol: VIG
-    name: Vanguard Dividend Appreciation ETF
-    total_quantity: 22.8000
-    average_cost: 168.40
-    total_cost_basis: 3839.52
-    current_price: 185.60
-    current_value: 4231.68
-    gain_loss: 392.16
-    gain_loss_percent: 10.21
-  - symbol: XLE
-    name: Energy Select Sector SPDR Fund
-    total_quantity: 18.6000
-    average_cost: 82.50
-    total_cost_basis: 1534.50
-    current_price: 76.80
-    current_value: 1428.48
-    gain_loss: -106.02
-    gain_loss_percent: -6.91
+- symbol: VTI
+  name: Vanguard Morningstar Total Stock Market ETF
+  total_quantity: 726.7298
+  average_cost: 280.84
+  total_cost_basis: 204095.12
+  current_price: 373.58
+  current_value: 271490.56
+  gain_loss: 67395.44
+  gain_loss_percent: 33.02
+- symbol: SCHH
+  name: Schwab U.S. REIT ETF
+  total_quantity: 1229.0851
+  average_cost: 21.55
+  total_cost_basis: 26487.95
+  current_price: 23.3
+  current_value: 28637.68
+  gain_loss: 2149.73
+  gain_loss_percent: 8.12
+- symbol: BND
+  name: Vanguard Total Bond Market ETF
+  total_quantity: 363.0861
+  average_cost: 73.53
+  total_cost_basis: 26697.81
+  current_price: 71.44
+  current_value: 25937.13
+  gain_loss: -760.68
+  gain_loss_percent: -2.85

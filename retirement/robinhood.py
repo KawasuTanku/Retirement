@@ -51,7 +51,7 @@ def logout() -> None:
 
 
 def get_ira_accounts() -> list[dict]:
-    """Discover Traditional and Roth IRA accounts."""
+    """Discover IRA accounts (labeled as 'cash' by Robinhood)."""
     r, urls, helper = _import_robinhood()
     ira_accounts = []
     try:
@@ -59,16 +59,38 @@ def get_ira_accounts() -> list[dict]:
         all_accounts = helper.request_get(acct_url, dataType='pagination')
 
         if all_accounts:
+            print(f"  Found {len(all_accounts)} account(s) total")
+            cash_accounts = []
             for acct in all_accounts:
                 acct_type = acct.get("type", "").lower()
-                if acct_type in ("roth", "traditional"):
+                acct_num = acct.get("account_number", "")
+                print(f"    - type='{acct_type}' number='{acct_num}'")
+                
+                # Robinhood labels IRAs as 'cash'
+                if acct_type == "cash":
+                    cash_accounts.append(acct_num)
+            
+            # Try to fetch positions for each cash account
+            for acct_num in cash_accounts:
+                try:
+                    positions = r.get_open_stock_positions(account_number=acct_num)
+                    if positions:
+                        open_pos = [p for p in positions if float(p.get("quantity", 0)) > 0]
+                        print(f"      -> {len(open_pos)} open position(s)")
+                    else:
+                        print(f"      -> No positions")
+                    
                     ira_accounts.append({
-                        "type": acct_type,
-                        "display_type": "Traditional IRA" if acct_type == "traditional" else "Roth IRA",
-                        "account_number": acct.get("account_number", ""),
+                        "type": "ira",
+                        "display_type": "IRA",
+                        "account_number": acct_num,
                     })
+                except Exception as e:
+                    print(f"      -> Error: {e}")
+        else:
+            print("  No accounts returned from API")
     except Exception as e:
-        print(f"Error discovering IRA accounts: {e}")
+        print(f"Error discovering accounts: {e}")
 
     return ira_accounts
 
@@ -125,21 +147,17 @@ def get_current_prices(symbols: list[str]) -> dict[str, float]:
 
 
 def fetch_ira_holdings() -> dict[str, Any]:
-    """Fetch and combine holdings from all IRAs."""
+    """Fetch and combine holdings from all accounts with positions."""
     if not login():
         return {}
 
     try:
         ira_accounts = get_ira_accounts()
         if not ira_accounts:
-            print("No IRA accounts found.")
+            print("No accounts with positions found.")
             return {}
 
-        print(f"Found {len(ira_accounts)} IRA account(s):")
-        for acct in ira_accounts:
-            print(f"  • {acct['display_type']} — {acct['account_number']}")
-        print()
-
+        print(f"\nFetching positions from {len(ira_accounts)} account(s)...")
         all_holdings = {}  # symbol -> combined data
         account_details = {}
 
@@ -150,6 +168,7 @@ def fetch_ira_holdings() -> dict[str, Any]:
                 "account_number": acct["account_number"],
                 "holdings": positions,
             }
+            print(f"  {acct['display_type']} ({acct['account_number']}): {len(positions)} position(s)")
 
             for pos in positions:
                 symbol = pos["symbol"]
@@ -163,9 +182,13 @@ def fetch_ira_holdings() -> dict[str, Any]:
                 all_holdings[symbol]["total_quantity"] += pos["quantity"]
                 all_holdings[symbol]["total_cost_basis"] += pos["quantity"] * pos["average_buy_price"]
 
+        if not all_holdings:
+            print("No holdings found across any account.")
+            return {}
+
         # Fetch current prices for all symbols
         symbols = list(all_holdings.keys())
-        print(f"Fetching current prices for {len(symbols)} symbols...")
+        print(f"\nFetching current prices for {len(symbols)} symbols...")
         prices = get_current_prices(symbols)
 
         # Calculate combined metrics

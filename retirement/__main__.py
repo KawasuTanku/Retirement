@@ -56,6 +56,11 @@ def main():
         default=60,
         help="Width of the bar chart in characters (default: 60)",
     )
+    parser.add_argument(
+        "--bars-only",
+        action="store_true",
+        help="Show only the bars without header, footer, or summary",
+    )
 
     args = parser.parse_args()
 
@@ -82,7 +87,7 @@ def main():
 
         # Display chart
         print()
-        print(render_bar_chart(data, width=args.chart_width))
+        print(render_bar_chart(data, width=args.chart_width, bars_only=args.bars_only))
         return
 
     # Load existing data
@@ -111,7 +116,7 @@ def main():
         sys.exit(1)
 
     # Display chart
-    print(render_bar_chart(data, width=args.chart_width))
+    print(render_bar_chart(data, width=args.chart_width, bars_only=args.bars_only))
 
 
 if __name__ == "__main__":

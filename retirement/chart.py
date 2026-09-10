@@ -13,13 +13,13 @@ BOLD = "\033[1m"
 DIM = "\033[2m"
 
 
-def render_bar_chart(data: dict[str, Any], width: int = 70) -> str:
+def render_bar_chart(data: dict[str, Any], width: int = 70, bars_only: bool = False) -> str:
     """Render a diverging horizontal bar chart with center at zero.
 
     Losses extend left (red), gains extend right (green).
     Dollar amount + percentage shown at bar end.
     """
-    holdings = data.get("holdings", [])
+    holdings = data.get("holdings", []) or data.get("combined", [])
     if not holdings:
         return "No holdings data available."
 
@@ -34,11 +34,12 @@ def render_bar_chart(data: dict[str, Any], width: int = 70) -> str:
     # Use half-width for each direction (left/right of center)
     half_width = width // 2
 
-    lines.append("=" * (width + 55))
-    lines.append(f"  {BOLD}RETIREMENT PORTFOLIO — Gain/Loss by Holding{RESET}")
-    lines.append(f"  Last updated: {data.get('last_updated', 'Unknown')}")
-    lines.append("=" * (width + 55))
-    lines.append("")
+    if not bars_only:
+        lines.append("=" * (width + 55))
+        lines.append(f"  {BOLD}RETIREMENT PORTFOLIO — Gain/Loss by Holding{RESET}")
+        lines.append(f"  Last updated: {data.get('last_updated', 'Unknown')}")
+        lines.append("=" * (width + 55))
+        lines.append("")
 
     # Find max absolute value for scaling
     max_abs = max(abs(h.get("gain_loss", 0)) for h in holdings) if holdings else 1
@@ -79,18 +80,19 @@ def render_bar_chart(data: dict[str, Any], width: int = 70) -> str:
 
         lines.append(line)
 
-    # Center marker
-    lines.append(f"  {'':6} {' ' * (half_width - 1)}|")
-    lines.append(f"  {'':6} {' ' * (half_width - 4)}{'─' * 8}")
+    if not bars_only:
+        # Center marker
+        lines.append(f"  {'':6} {' ' * (half_width - 1)}|")
+        lines.append(f"  {'':6} {' ' * (half_width - 4)}{'─' * 8}")
 
-    # Footer
-    lines.append("")
-    lines.append("─" * (width + 55))
-    total_marker = "+" if total_gl >= 0 else "-"
-    total_color = GREEN if total_gl >= 0 else RED
-    lines.append(f"  TOTAL COST BASIS:  ${total_cost:>14,.2f}")
-    lines.append(f"  TOTAL VALUE:       ${total_value:>14,.2f}")
-    lines.append(f"  TOTAL GAIN/LOSS:   {total_color}{total_marker}${abs(total_gl):>13,.2f} ({total_marker}{abs(total_gl_pct):.1f}%){RESET}")
-    lines.append("─" * (width + 55))
+        # Footer
+        lines.append("")
+        lines.append("─" * (width + 55))
+        total_marker = "+" if total_gl >= 0 else "-"
+        total_color = GREEN if total_gl >= 0 else RED
+        lines.append(f"  TOTAL COST BASIS:  ${total_cost:>14,.2f}")
+        lines.append(f"  TOTAL VALUE:       ${total_value:>14,.2f}")
+        lines.append(f"  TOTAL GAIN/LOSS:   {total_color}{total_marker}${abs(total_gl):>13,.2f} ({total_marker}{abs(total_gl_pct):.1f}%){RESET}")
+        lines.append("─" * (width + 55))
 
     return "\n".join(lines)
