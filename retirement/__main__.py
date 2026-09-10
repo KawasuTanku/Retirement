@@ -20,7 +20,7 @@ from retirement.storage import (
     save_to_toml,
     save_to_yaml,
 )
-from retirement.chart import render_bar_chart, render_summary
+from retirement.chart import render_bar_chart
 
 
 def main():
