@@ -96,3 +96,106 @@ def render_bar_chart(data: dict[str, Any], width: int = 70, bars_only: bool = Fa
         lines.append("─" * (width + 55))
 
     return "\n".join(lines)
+
+
+# Default target allocation
+DEFAULT_TARGETS = {
+    "VTI": 80,
+    "SCHH": 10,
+    "BND": 10,
+}
+
+
+def render_rebalance(
+    data: dict[str, Any],
+    targets: dict[str, int] | None = None,
+    width: int = 70,
+) -> str:
+    """Render rebalance analysis showing actual vs target allocation.
+
+    Shows drift from target and suggested trades to rebalance.
+    """
+    if targets is None:
+        targets = DEFAULT_TARGETS
+
+    holdings = data.get("holdings", []) or data.get("combined", [])
+    if not holdings:
+        return "No holdings data available."
+
+    total_value = sum(h.get("current_value", 0) for h in holdings)
+    if total_value == 0:
+        return "Total portfolio value is zero."
+
+    lines = []
+    lines.append("=" * (width + 55))
+    lines.append(f"  {BOLD}REBALANCE ANALYSIS — Actual vs Target{RESET}")
+    lines.append("=" * (width + 55))
+    lines.append("")
+
+    # Calculate actual percentages and drift
+    analysis = []
+    for h in holdings:
+        symbol = h.get("symbol", "N/A")
+        value = h.get("current_value", 0)
+        actual_pct = (value / total_value) * 100
+        target_pct = targets.get(symbol, 0)
+        drift = actual_pct - target_pct
+        drift_value = (drift / 100) * total_value
+        analysis.append({
+            "symbol": symbol,
+            "value": value,
+            "actual_pct": actual_pct,
+            "target_pct": target_pct,
+            "drift": drift,
+            "drift_value": drift_value,
+        })
+
+    # Sort by drift (most underweight first)
+    analysis.sort(key=lambda x: x["drift"])
+
+    # Header
+    lines.append(f"  {'Symbol':<8} {'Value':>14} {'Actual':>8} {'Target':>8} {'Drift':>8}  {'Trade':>14}")
+    lines.append(f"  {'─' * 8} {'─' * 14} {'─' * 8} {'─' * 8} {'─' * 8}  {'─' * 14}")
+
+    for a in analysis:
+        symbol = a["symbol"]
+        value = a["value"]
+        actual = a["actual_pct"]
+        target = a["target_pct"]
+        drift = a["drift"]
+        drift_value = a["drift_value"]
+
+        # Color code drift
+        if abs(drift) < 1:
+            color = DIM
+            status = "OK"
+        elif drift > 0:
+            color = GREEN
+            status = "SELL"
+        else:
+            color = RED
+            status = "BUY"
+
+        # Format trade suggestion
+        if abs(drift) < 1:
+            trade_str = "—"
+        else:
+            trade_str = f"{status} ${abs(drift_value):,.0f}"
+
+        line = f"  {symbol:<8} ${value:>13,.2f} {actual:>7.1f}% {target:>7.0f}% {color}{drift:>+7.1f}%{RESET}  {color}{trade_str:>14}{RESET}"
+        lines.append(line)
+
+    # Summary
+    lines.append("")
+    lines.append("─" * (width + 55))
+    lines.append(f"  TOTAL PORTFOLIO VALUE: ${total_value:>14,.2f}")
+    lines.append("─" * (width + 55))
+
+    # Show target allocation summary
+    lines.append("")
+    lines.append(f"  {BOLD}Target Allocation:{RESET}")
+    for sym, pct in targets.items():
+        target_value = (pct / 100) * total_value
+        lines.append(f"    {sym}: {pct}% (${target_value:,.0f})")
+
+    return "\n".join(lines)

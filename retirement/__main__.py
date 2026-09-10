@@ -20,7 +20,7 @@ from retirement.storage import (
     save_to_toml,
     save_to_yaml,
 )
-from retirement.chart import render_bar_chart
+from retirement.chart import render_bar_chart, render_rebalance
 
 
 def main():
@@ -61,6 +61,11 @@ def main():
         action="store_true",
         help="Show only the bars without header, footer, or summary",
     )
+    parser.add_argument(
+        "--rebalance",
+        action="store_true",
+        help="Show rebalance analysis vs target allocation",
+    )
 
     args = parser.parse_args()
 
@@ -84,6 +89,11 @@ def main():
             save_to_toml(data, output_path)
 
         print(f"\nData saved to {output_path}")
+
+        # Display rebalance analysis
+        if args.rebalance:
+            print(render_rebalance(data, width=args.chart_width))
+            return
 
         # Display chart
         print()
@@ -114,6 +124,11 @@ def main():
     else:
         print(f"Unsupported file format: {filepath.suffix}")
         sys.exit(1)
+
+    # Display rebalance analysis
+    if args.rebalance:
+        print(render_rebalance(data, width=args.chart_width))
+        return
 
     # Display chart
     print(render_bar_chart(data, width=args.chart_width, bars_only=args.bars_only))
