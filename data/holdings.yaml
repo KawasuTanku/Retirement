@@ -1,32 +1,33 @@
-last_updated: '2026-09-10T09:56:05.909729'
-total_value: 326222.59
-total_cost_basis: 257291.18
-total_gain_loss: 68931.41
+# Sample holdings data — replace with real data from `retirement --fetch`
+last_updated: '2026-09-10T14:40:36.635228'
+total_value: 100000.00
+total_cost_basis: 85000.00
+total_gain_loss: 15000.00
 holdings:
 - symbol: VTI
-  name: Vanguard Morningstar Total Stock Market ETF
-  total_quantity: 726.7298
-  average_cost: 280.84
-  total_cost_basis: 204095.12
-  current_price: 373.92
-  current_value: 271735.18
-  gain_loss: 67640.06
-  gain_loss_percent: 33.14
+  name: Vanguard Total Stock Market ETF
+  total_quantity: 100.0
+  average_cost: 250.0
+  total_cost_basis: 25000.0
+  current_price: 300.0
+  current_value: 30000.0
+  gain_loss: 5000.0
+  gain_loss_percent: 20.0
 - symbol: SCHH
   name: Schwab U.S. REIT ETF
-  total_quantity: 1229.0851
-  average_cost: 21.55
-  total_cost_basis: 26487.95
-  current_price: 23.23
-  current_value: 28545.5
-  gain_loss: 2057.55
-  gain_loss_percent: 7.77
+  total_quantity: 500.0
+  average_cost: 20.0
+  total_cost_basis: 10000.0
+  current_price: 22.0
+  current_value: 11000.0
+  gain_loss: 1000.0
+  gain_loss_percent: 10.0
 - symbol: BND
   name: Vanguard Total Bond Market ETF
-  total_quantity: 363.2303
-  average_cost: 73.53
-  total_cost_basis: 26708.11
-  current_price: 71.42
-  current_value: 25941.91
-  gain_loss: -766.2
-  gain_loss_percent: -2.87
+  total_quantity: 200.0
+  average_cost: 75.0
+  total_cost_basis: 15000.0
+  current_price: 70.0
+  current_value: 14000.0
+  gain_loss: -1000.0
+  gain_loss_percent: -6.67

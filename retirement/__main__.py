@@ -9,7 +9,13 @@ from pathlib import Path
 
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    tankuos_dir = Path.home() / "TankuOS" / "Apps" / "Retirement" / "configs" / ".env"
+    if tankuos_dir.is_file():
+        # Running inside TankuOS: load only our own .env, never CWD
+        load_dotenv(tankuos_dir)
+    else:
+        # Legacy/manual install: load .env from CWD
+        load_dotenv()
 except ImportError:
     pass
 
